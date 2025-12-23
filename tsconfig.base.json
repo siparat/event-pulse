@@ -10,11 +10,27 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@event-pulse/contracts": [
+        "libs/contracts/src/index.ts"
+      ],
+      "@event-pulse/types": [
+        "libs/types/src/index.ts"
+      ],
+      "@event-pulse/infrastructure": [
+        "libs/infrastructure/src/index.ts"
+      ]
+    }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
