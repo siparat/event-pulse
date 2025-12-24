@@ -21,7 +21,7 @@
 - **Event-Driven Architecture** (EDA)
 
 ### Data & Infrastructure
-- **ORM:** Prisma
+- **ORM:** TypeORM
 - **Databases:** PostgreSQL, Redis
 - **Messaging:** RabbitMQ
 - **API Documentation:** Swagger (OpenAPI)
