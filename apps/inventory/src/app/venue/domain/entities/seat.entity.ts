@@ -4,19 +4,68 @@ import { SeatIdVO } from '../value-objects/seat-id.vo';
 import { SeatRowVO } from '../value-objects/seat-row.vo';
 import { SeatStatus } from '../constants/seat-status.constants';
 
-export class Seat {
-	private constructor(
-		private readonly id: SeatIdVO,
-		private row: SeatRowVO,
-		private col: SeatColVO,
-		private status: SeatStatus
-	) {}
+interface SeatProps {
+	id: SeatIdVO;
+	row: SeatRowVO;
+	col: SeatColVO;
+	zoneId: string;
+	status: SeatStatus;
+}
 
-	static register(row: number, col: number): Seat {
-		return new Seat(new SeatIdVO(randomUUID()), new SeatRowVO(row), new SeatColVO(col), SeatStatus.AVAILABLE);
+export class Seat {
+	private readonly id: SeatIdVO;
+	private row: SeatRowVO;
+	private col: SeatColVO;
+	private zoneId: string;
+	private status: SeatStatus;
+
+	private constructor(props: SeatProps) {
+		this.id = props.id;
+		this.row = props.row;
+		this.col = props.col;
+		this.zoneId = props.zoneId;
+		this.status = props.status;
 	}
 
-	static restore(id: string, row: number, col: number, status: SeatStatus): Seat {
-		return new Seat(new SeatIdVO(id), new SeatRowVO(row), new SeatColVO(col), status);
+	public reserve(): void {
+		if (this.status !== SeatStatus.AVAILABLE) {
+			throw new Error('Место уже занято или забронировано');
+		}
+		this.status = SeatStatus.RESERVED;
+	}
+
+	public release(): void {
+		this.status = SeatStatus.AVAILABLE;
+	}
+
+	public makeSold(): void {
+		if (this.status !== SeatStatus.RESERVED) {
+			throw new Error('Место должно быть сначала забронировано');
+		}
+		this.status = SeatStatus.SOLD;
+	}
+
+	static register(row: number, col: number, zoneId: string): Seat {
+		return new Seat({
+			id: new SeatIdVO(randomUUID()),
+			row: new SeatRowVO(row),
+			col: new SeatColVO(col),
+			zoneId: zoneId,
+			status: SeatStatus.AVAILABLE
+		});
+	}
+
+	static restore(props: SeatProps): Seat {
+		return new Seat(props);
+	}
+
+	toPrimitives() {
+		return {
+			id: this.id.toString(),
+			row: this.row.toInt(),
+			col: this.col.toInt(),
+			zoneId: this.zoneId,
+			status: this.status
+		};
 	}
 }

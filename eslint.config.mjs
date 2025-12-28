@@ -35,7 +35,12 @@ export default [
 			'@typescript-eslint/no-unused-expressions': 'off',
 			'@typescript-eslint/no-namespace': 'off',
 			'@typescript-eslint/interface-name-prefix': 'off',
-			'@typescript-eslint/explicit-function-return-type': 'warn',
+			'@typescript-eslint/explicit-function-return-type': [
+				'warn',
+				{
+					allowedNames: ['toPrimitives']
+				}
+			],
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
 			'@typescript-eslint/no-explicit-any': 'warn',
 			'@typescript-eslint/no-unused-vars': [
