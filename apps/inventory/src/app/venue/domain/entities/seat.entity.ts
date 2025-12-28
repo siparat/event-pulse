@@ -5,6 +5,9 @@ import { SeatRow } from '../value-objects/seat-row.vo';
 import { SeatStatus } from '../constants/seat-status.constants';
 import { SeatAlreadyBookedException } from '../exceptions/seat-already-booked.exception';
 import { SeatMustBookedFirstException } from '../exceptions/seat-must-booked-first.exception';
+import { SeatReservedEvent } from '../events/seat-reserved.event';
+import { Entity } from '@event-pulse/domain';
+import { SeatReservationExpiredEvent } from '../events/seat-reservation-expired.event';
 
 interface SeatProps {
 	id: SeatId;
@@ -12,16 +15,20 @@ interface SeatProps {
 	col: SeatCol;
 	zoneId: string;
 	status: SeatStatus;
+	expiredAt?: Date;
 }
 
-export class Seat {
+export class Seat extends Entity {
 	private readonly id: SeatId;
 	private row: SeatRow;
 	private col: SeatCol;
 	private zoneId: string;
 	private status: SeatStatus;
+	private lockedUntil?: Date;
 
 	private constructor(props: SeatProps) {
+		super();
+
 		this.id = props.id;
 		this.row = props.row;
 		this.col = props.col;
@@ -29,15 +36,23 @@ export class Seat {
 		this.status = props.status;
 	}
 
-	public reserve(): void {
+	public reserve(minutes = 15): void {
 		if (this.status !== SeatStatus.AVAILABLE) {
 			throw new SeatAlreadyBookedException();
 		}
 		this.status = SeatStatus.RESERVED;
+		this.lockedUntil = new Date(Date.now() + 60000 * minutes);
+		this.addEvent(
+			new SeatReservedEvent(this.id.toString(), this.zoneId, this.row.toInt(), this.col.toInt(), this.lockedUntil)
+		);
 	}
 
 	public release(): void {
 		this.status = SeatStatus.AVAILABLE;
+		this.lockedUntil = undefined;
+		this.addEvent(
+			new SeatReservationExpiredEvent(this.id.toString(), this.zoneId, this.row.toInt(), this.col.toInt())
+		);
 	}
 
 	public makeSold(): void {
@@ -45,6 +60,7 @@ export class Seat {
 			throw new SeatMustBookedFirstException();
 		}
 		this.status = SeatStatus.SOLD;
+		this.lockedUntil = undefined;
 	}
 
 	static register(row: number, col: number, zoneId: string): Seat {

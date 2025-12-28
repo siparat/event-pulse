@@ -26,6 +26,9 @@
       ],
       "@event-pulse/infrastructure": [
         "libs/infrastructure/src/index.ts"
+      ],
+      "@event-pulse/domain": [
+        "libs/domain/src/index.ts"
       ]
     }
   },
