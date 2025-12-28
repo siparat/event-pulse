@@ -1,6 +1,6 @@
 import { InvalidSeatRowException } from '../exceptions/invalid-seat-row.exception';
 
-export class SeatRowVO {
+export class SeatRow {
 	constructor(private row: number) {
 		if (row <= 0) {
 			throw new InvalidSeatRowException(row);

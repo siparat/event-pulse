@@ -1,16 +1,16 @@
 import { VenueStatus } from './constants/vanue-status.constants';
-import { ZoneEntity } from './entities/zone.entity';
-import { VenueIdVO } from './value-objects/venue-id.vo';
-import { VenueNameVO } from './value-objects/venue-name';
+import { Zone } from './entities/zone.entity';
+import { VenueId } from './value-objects/venue-id.vo';
+import { VenueName } from './value-objects/venue-name';
 
-export class VenueAggregate {
+export class Venue {
 	private domainEvents: object[] = [];
 
 	private constructor(
-		public id: VenueIdVO,
+		public id: VenueId,
 		public address: string,
-		public name: VenueNameVO,
-		private zones: ZoneEntity[],
+		public name: VenueName,
+		private zones: Zone[],
 		public status: VenueStatus
 	) {}
 
