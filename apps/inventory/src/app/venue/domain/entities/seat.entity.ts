@@ -3,6 +3,8 @@ import { SeatColVO } from '../value-objects/seat-col.vo';
 import { SeatIdVO } from '../value-objects/seat-id.vo';
 import { SeatRowVO } from '../value-objects/seat-row.vo';
 import { SeatStatus } from '../constants/seat-status.constants';
+import { SeatAlreadyBookedException } from '../exceptions/seat-already-booked.exception';
+import { SeatMustBookedFirstException } from '../exceptions/seat-must-booked-first.exception';
 
 interface SeatProps {
 	id: SeatIdVO;
@@ -29,7 +31,7 @@ export class Seat {
 
 	public reserve(): void {
 		if (this.status !== SeatStatus.AVAILABLE) {
-			throw new Error('Место уже занято или забронировано');
+			throw new SeatAlreadyBookedException();
 		}
 		this.status = SeatStatus.RESERVED;
 	}
@@ -40,7 +42,7 @@ export class Seat {
 
 	public makeSold(): void {
 		if (this.status !== SeatStatus.RESERVED) {
-			throw new Error('Место должно быть сначала забронировано');
+			throw new SeatMustBookedFirstException();
 		}
 		this.status = SeatStatus.SOLD;
 	}
