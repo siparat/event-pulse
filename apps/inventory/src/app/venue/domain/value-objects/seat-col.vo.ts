@@ -1,6 +1,6 @@
 import { InvalidSeatColException } from '../exceptions/invalid-seat-col.exception';
 
-export class SeatColVO {
+export class SeatCol {
 	constructor(private col: number) {
 		if (col <= 0) {
 			throw new InvalidSeatColException(col);

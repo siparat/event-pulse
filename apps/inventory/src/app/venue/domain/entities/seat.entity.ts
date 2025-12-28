@@ -1,23 +1,23 @@
 import { randomUUID } from 'crypto';
-import { SeatColVO } from '../value-objects/seat-col.vo';
-import { SeatIdVO } from '../value-objects/seat-id.vo';
-import { SeatRowVO } from '../value-objects/seat-row.vo';
+import { SeatCol } from '../value-objects/seat-col.vo';
+import { SeatId } from '../value-objects/seat-id.vo';
+import { SeatRow } from '../value-objects/seat-row.vo';
 import { SeatStatus } from '../constants/seat-status.constants';
 import { SeatAlreadyBookedException } from '../exceptions/seat-already-booked.exception';
 import { SeatMustBookedFirstException } from '../exceptions/seat-must-booked-first.exception';
 
 interface SeatProps {
-	id: SeatIdVO;
-	row: SeatRowVO;
-	col: SeatColVO;
+	id: SeatId;
+	row: SeatRow;
+	col: SeatCol;
 	zoneId: string;
 	status: SeatStatus;
 }
 
 export class Seat {
-	private readonly id: SeatIdVO;
-	private row: SeatRowVO;
-	private col: SeatColVO;
+	private readonly id: SeatId;
+	private row: SeatRow;
+	private col: SeatCol;
 	private zoneId: string;
 	private status: SeatStatus;
 
@@ -49,9 +49,9 @@ export class Seat {
 
 	static register(row: number, col: number, zoneId: string): Seat {
 		return new Seat({
-			id: new SeatIdVO(randomUUID()),
-			row: new SeatRowVO(row),
-			col: new SeatColVO(col),
+			id: new SeatId(randomUUID()),
+			row: new SeatRow(row),
+			col: new SeatCol(col),
 			zoneId: zoneId,
 			status: SeatStatus.AVAILABLE
 		});

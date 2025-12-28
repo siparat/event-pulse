@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
 import { Seat } from './seat.entity';
-import { ZoneIdVO } from '../value-objects/zone-id.vo';
+import { ZoneId } from '../value-objects/zone-id.vo';
 
 export interface ZoneProps {
-	id: ZoneIdVO;
+	id: ZoneId;
 	venueId: string;
 	name: string;
 	totalRows: number;
@@ -11,8 +11,8 @@ export interface ZoneProps {
 	seats?: Seat[];
 }
 
-export class ZoneEntity {
-	private readonly id: ZoneIdVO;
+export class Zone {
+	private readonly id: ZoneId;
 	private venueId: string;
 	private name: string;
 	private totalRows: number;
@@ -41,13 +41,13 @@ export class ZoneEntity {
 		return seats;
 	}
 
-	static register(venueId: string, name: string, totalRows: number, totalCols: number): ZoneEntity {
+	static register(venueId: string, name: string, totalRows: number, totalCols: number): Zone {
 		if (totalRows <= 0 || totalCols <= 0) {
 			throw new Error('Размеры зоны должны быть положительными числами');
 		}
 
-		return new ZoneEntity({
-			id: new ZoneIdVO(randomUUID()),
+		return new Zone({
+			id: new ZoneId(randomUUID()),
 			venueId,
 			name,
 			totalRows,
@@ -56,8 +56,8 @@ export class ZoneEntity {
 		});
 	}
 
-	static restore(props: ZoneProps): ZoneEntity {
-		return new ZoneEntity(props);
+	static restore(props: ZoneProps): Zone {
+		return new Zone(props);
 	}
 
 	toPrimitives() {
