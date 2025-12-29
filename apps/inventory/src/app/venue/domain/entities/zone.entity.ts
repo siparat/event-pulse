@@ -12,15 +12,19 @@ export interface ZoneProps {
 }
 
 export class Zone {
-	private readonly id: ZoneId;
+	private readonly _id: ZoneId;
 	private venueId: string;
-	private name: string;
-	private totalRows: number;
-	private totalCols: number;
+	public readonly name: string;
+	public readonly totalRows: number;
+	public readonly totalCols: number;
 	private seats?: Seat[];
 
+	get id(): string {
+		return this._id.toString();
+	}
+
 	private constructor(props: ZoneProps) {
-		this.id = props.id;
+		this._id = props.id;
 		this.venueId = props.venueId;
 		this.name = props.name;
 		this.totalCols = props.totalCols;
