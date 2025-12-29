@@ -9,7 +9,7 @@ import { SeatReservedEvent } from '../events/seat-reserved.event';
 import { Entity } from '@event-pulse/domain';
 import { SeatReservationExpiredEvent } from '../events/seat-reservation-expired.event';
 
-interface SeatProps {
+export interface SeatProps {
 	id: SeatId;
 	row: SeatRow;
 	col: SeatCol;

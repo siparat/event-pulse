@@ -1,3 +1,7 @@
 import { DomainEvent } from '@event-pulse/domain';
 
-export class VenueCreatedEvent extends DomainEvent {}
+export class VenueCreatedEvent extends DomainEvent {
+	constructor(public id: string) {
+		super();
+	}
+}
