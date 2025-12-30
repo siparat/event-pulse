@@ -7,10 +7,12 @@ import { ZoneModel } from './venue/infrastructure/database/write/models/zone.mod
 import { SeatModel } from './venue/infrastructure/database/write/models/seat.model';
 import { VenueModule } from './venue/venue.module';
 import { join } from 'path';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
 	imports: [
 		VenueModule,
+		CqrsModule.forRoot(),
 		ConfigModule.forRoot({ envFilePath: 'envs/.inventory.env', isGlobal: true }),
 		TypeOrmModule.forRootAsync(
 			getTypeormConfig(

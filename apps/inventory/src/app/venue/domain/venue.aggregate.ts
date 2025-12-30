@@ -23,7 +23,7 @@ interface VenueProps {
 }
 
 export class Venue extends Aggregate {
-	private id: VenueId;
+	private readonly _id: VenueId;
 	private address: string;
 	private name: VenueName;
 	private zones: Zone[];
@@ -33,7 +33,7 @@ export class Venue extends Aggregate {
 	private constructor(props: VenueProps) {
 		super();
 
-		this.id = props.id;
+		this._id = props.id;
 		this.address = props.address;
 		this.name = props.name;
 		this.status = props.status;
@@ -48,7 +48,7 @@ export class Venue extends Aggregate {
 			throw new VenueInUsedException(this.name.toString());
 		}
 		this.status = VenueStatus.ARCHIVED;
-		this.addEvent(new VenueAchivedEvent(this.id.toString()));
+		this.addEvent(new VenueAchivedEvent(this._id.toString()));
 	}
 
 	open(): void {
@@ -60,7 +60,7 @@ export class Venue extends Aggregate {
 		}
 		this.status = VenueStatus.OPENED;
 		this.eventId = undefined;
-		this.addEvent(new VenueIsOpenedForEventsEvent(this.id.toString(), this.address, this.name.toString()));
+		this.addEvent(new VenueIsOpenedForEventsEvent(this._id.toString(), this.address, this.name.toString()));
 	}
 
 	use(eventId: string): void {
@@ -75,7 +75,7 @@ export class Venue extends Aggregate {
 		}
 		this.eventId = eventId;
 		this.status = VenueStatus.IN_USED;
-		this.addEvent(new VenueUsedEvent(this.id.toString(), eventId));
+		this.addEvent(new VenueUsedEvent(this._id.toString(), eventId));
 	}
 
 	closeForMaintenance(): void {
@@ -96,7 +96,7 @@ export class Venue extends Aggregate {
 			throw new ZoneWithThisNameAlreadyExists(name);
 		}
 
-		const newZone = Zone.register(this.id.toString(), name, cols, rows);
+		const newZone = Zone.register(this._id.toString(), name, cols, rows);
 		this.zones.push(newZone);
 	}
 
@@ -120,11 +120,15 @@ export class Venue extends Aggregate {
 
 	toPrimitives() {
 		return {
-			id: this.id.toString(),
+			id: this._id.toString(),
 			address: this.address,
 			name: this.name.toString(),
 			zones: this.zones.map((z) => z.toPrimitives()),
 			eventId: this.eventId
 		};
+	}
+
+	get id(): string {
+		return this._id.toString();
 	}
 }
