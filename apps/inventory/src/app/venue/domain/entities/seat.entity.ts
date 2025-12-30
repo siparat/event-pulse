@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { SeatCol } from '../value-objects/seat-col.vo';
 import { SeatId } from '../value-objects/seat-id.vo';
 import { SeatRow } from '../value-objects/seat-row.vo';
-import { SeatStatus } from '../constants/seat-status.constants';
+import { SeatStatus } from '@event-pulse/types';
 import { SeatAlreadyBookedException } from '../exceptions/seat-already-booked.exception';
 import { SeatMustBookedFirstException } from '../exceptions/seat-must-booked-first.exception';
 import { SeatReservedEvent } from '../events/seat-reserved.event';
@@ -15,7 +15,7 @@ export interface SeatProps {
 	col: SeatCol;
 	zoneId: string;
 	status: SeatStatus;
-	expiredAt?: Date;
+	lockedUntil?: Date;
 }
 
 export class Seat extends Entity {
@@ -34,6 +34,7 @@ export class Seat extends Entity {
 		this.col = props.col;
 		this.zoneId = props.zoneId;
 		this.status = props.status;
+		this.lockedUntil = props.lockedUntil;
 	}
 
 	public reserve(minutes = 15): void {
