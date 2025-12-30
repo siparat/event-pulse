@@ -1,5 +1,5 @@
 import { Aggregate } from '@event-pulse/domain';
-import { VenueStatus } from './constants/vanue-status.constants';
+import { VenueStatus } from '@event-pulse/types';
 import { Zone } from './entities/zone.entity';
 import { VenueId } from './value-objects/venue-id.vo';
 import { VenueName } from './value-objects/venue-name';
