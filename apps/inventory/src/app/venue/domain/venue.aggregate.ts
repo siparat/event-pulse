@@ -13,6 +13,8 @@ import { VenueIsOpenedForEventsEvent } from './events/venue-is-opened-for-events
 import { NeedToOpenVenueFirst } from './exceptions/need-to-open-venue-first.exception';
 import { VenueUsedEvent } from './events/venue-used.event';
 import { NeedToCloseForMaintenanceVenueFirst } from './exceptions/need-to-close-for-maintenance-venue-first.exception';
+import { VenueUniquenessChecker } from './policies/venue-unique-address.policy';
+import { VenueAlreadyExistsException } from './exceptions/venue-already-exists.exception';
 
 interface VenueProps {
 	id: VenueId;
@@ -104,7 +106,11 @@ export class Venue extends Aggregate {
 		return new Venue(props);
 	}
 
-	static register(address: string, name: string): Venue {
+	static async register(address: string, name: string, checker: VenueUniquenessChecker): Promise<Venue> {
+		if (await checker.existsByAddress(address)) {
+			throw new VenueAlreadyExistsException(address);
+		}
+
 		const venue = new Venue({
 			id: new VenueId(randomUUID()),
 			address,

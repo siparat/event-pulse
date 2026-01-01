@@ -15,4 +15,8 @@ export class VenueRepository {
 	async findByAddress(address: string): Promise<VenueModel | null> {
 		return this.repo.findOne({ where: { address } });
 	}
+
+	async existsByAddress(address: string): Promise<boolean> {
+		return this.repo.exists({ where: { address } });
+	}
 }
