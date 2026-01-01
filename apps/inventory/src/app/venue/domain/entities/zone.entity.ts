@@ -8,7 +8,7 @@ export interface ZoneProps {
 	name: string;
 	totalRows: number;
 	totalCols: number;
-	seats?: Seat[];
+	seats: Seat[];
 }
 
 export class Zone {
@@ -17,7 +17,7 @@ export class Zone {
 	public readonly name: string;
 	public readonly totalRows: number;
 	public readonly totalCols: number;
-	private seats?: Seat[];
+	private seats: Seat[];
 
 	get id(): string {
 		return this._id.toString();
@@ -43,6 +43,10 @@ export class Zone {
 
 		this.seats = seats;
 		return seats;
+	}
+
+	getSeats(): Seat[] {
+		return [...this.seats];
 	}
 
 	static register(venueId: string, name: string, totalRows: number, totalCols: number): Zone {
