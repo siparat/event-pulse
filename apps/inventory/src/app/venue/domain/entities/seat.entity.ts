@@ -84,7 +84,8 @@ export class Seat extends Entity {
 			row: this.row.toInt(),
 			col: this.col.toInt(),
 			zoneId: this.zoneId,
-			status: this.status
+			status: this.status,
+			lockedUntil: this.lockedUntil
 		};
 	}
 }
