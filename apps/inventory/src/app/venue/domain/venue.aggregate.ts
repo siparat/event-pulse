@@ -102,6 +102,10 @@ export class Venue extends Aggregate {
 		this.zones.push(newZone);
 	}
 
+	getZones(): Zone[] {
+		return [...this.zones];
+	}
+
 	static restore(props: VenueProps): Venue {
 		return new Venue(props);
 	}
@@ -130,6 +134,7 @@ export class Venue extends Aggregate {
 			address: this.address,
 			name: this.name.toString(),
 			zones: this.zones.map((z) => z.toPrimitives()),
+			status: this.status,
 			eventId: this.eventId
 		};
 	}
