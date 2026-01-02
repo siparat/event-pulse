@@ -123,7 +123,7 @@ export class Venue extends Aggregate {
 			status: VenueStatus.DRAFT
 		});
 
-		venue.addEvent(new VenueCreatedEvent(venue.id.toString()));
+		venue.addEvent(new VenueCreatedEvent(venue.id.toString(), venue.name.toString(), venue.address));
 
 		return venue;
 	}

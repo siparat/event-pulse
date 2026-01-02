@@ -1,7 +1,7 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { CreateVenueCommand } from './create-venue.command';
-import { Venue } from '../../domain/venue.aggregate';
-import { VenueRepository } from '../../domain/repositories/venue.repository';
+import { Venue } from '../../../domain/venue.aggregate';
+import { VenueRepository } from '../../../domain/repositories/venue.repository';
 
 @CommandHandler(CreateVenueCommand)
 export class CreateVenueHandler implements ICommandHandler<CreateVenueCommand> {
