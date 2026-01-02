@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export namespace InventoryCreateVenue {
+export namespace CreateVenueIntegrationCommand {
 	export const topic = 'inventory.create-venue.command';
 
 	export const RequestSchema = z.object({
