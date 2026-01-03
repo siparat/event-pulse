@@ -8,7 +8,13 @@ export class OutboxRepository {
 	constructor(@InjectRepository(OutboxModel) private repo: Repository<OutboxModel>) {}
 
 	findUnprocessed(): Promise<OutboxModel[]> {
-		return this.repo.find({ where: { published: false } });
+		return this.repo
+			.createQueryBuilder('outbox')
+			.where('outbox.published IS FALSE')
+			.orderBy('outbox.occurredAt', 'ASC')
+			.setLock('pessimistic_write')
+			.setOnLocked('skip_locked')
+			.getMany();
 	}
 
 	async markProcessed(id: number): Promise<void> {
