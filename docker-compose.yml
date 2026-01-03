@@ -19,7 +19,7 @@ services:
       - redis-data:/data
 
   inventory-database:
-    image: postgres:latest
+    image: postgres:17
     container_name: inventory-database
     environment:
       - POSTGRES_PASSWORD=pass
@@ -33,7 +33,7 @@ services:
       - inventory-database-data:/var/lib/postgresql/data
 
   sales-database:
-    image: postgres:latest
+    image: postgres:17
     container_name: sales-database
     environment:
       - POSTGRES_PASSWORD=pass
@@ -47,7 +47,7 @@ services:
       - sales-database-data:/var/lib/postgresql/data
 
   access-database:
-    image: postgres:latest
+    image: postgres:17
     container_name: access-database
     environment:
       - POSTGRES_PASSWORD=pass

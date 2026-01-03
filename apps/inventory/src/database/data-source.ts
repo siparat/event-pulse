@@ -4,7 +4,7 @@ import { join } from 'path';
 
 config({ path: '../../envs/.inventory.env' });
 
-export const VenueDataSource = new DataSource({
+export const dataSource = new DataSource({
 	type: 'postgres',
 	url: process.env.WRITE_DB_URL,
 	entities: [join(__dirname, '../**', '*.model{.ts,.js}')],
