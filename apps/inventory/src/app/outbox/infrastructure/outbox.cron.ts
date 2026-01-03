@@ -1,6 +1,8 @@
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { OutboxProcessor } from './outbox.processor';
+import { Controller } from '@nestjs/common';
 
+@Controller()
 export class OutboxCron {
 	constructor(private outboxProcessor: OutboxProcessor) {}
 

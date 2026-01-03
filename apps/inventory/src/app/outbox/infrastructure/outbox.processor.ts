@@ -4,26 +4,32 @@ import { EventBus } from '@nestjs/cqrs';
 import { outboxRegistry } from './outbox.registry';
 import { ClientProxy } from '@nestjs/microservices';
 import { RmqQueues } from '@event-pulse/infrastructure';
+import { DataSource } from 'typeorm';
+import { OutboxModel } from './database/write/models/outbox.model';
 
 @Injectable()
 export class OutboxProcessor {
 	constructor(
+		private dataSource: DataSource,
 		private outboxRepo: OutboxRepository,
 		private eventBus: EventBus,
 		@Inject(RmqQueues.INVENTORY) private clientProxy: ClientProxy
 	) {}
 
 	async process(): Promise<void> {
-		const events = await this.outboxRepo.findUnprocessed();
+		await this.dataSource.transaction(async (manager) => {
+			const outboxRepo = new OutboxRepository(manager.getRepository(OutboxModel));
+			const records = await outboxRepo.findUnprocessed();
+			for (const record of records) {
+				const creator = outboxRegistry[record.type];
+				const { topic, event } = creator(record.payload);
 
-		for (const record of events) {
-			const creator = outboxRegistry[record.type];
-			const { topic, event } = creator(record.payload);
+				await this.eventBus.publish(event);
 
-			await this.eventBus.publish(event);
-			this.clientProxy.emit(topic, event);
+				this.clientProxy.emit(topic, event);
 
-			await this.outboxRepo.markProcessed(record.id);
-		}
+				await outboxRepo.markProcessed(record.id);
+			}
+		});
 	}
 }
