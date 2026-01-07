@@ -15,6 +15,8 @@ import { VenueUsedEvent } from './events/venue-used.event';
 import { NeedToCloseForMaintenanceVenueFirst } from './exceptions/need-to-close-for-maintenance-venue-first.exception';
 import { VenueUniquenessChecker } from './policies/venue-unique-address.policy';
 import { VenueAlreadyExistsException } from './exceptions/venue-already-exists.exception';
+import { UpdateVenueProps } from './interfaces/update-venue-props.interface';
+import { VenueUpdatedEvent } from './events/venue-updated.event';
 
 interface VenueProps {
 	id: VenueId;
@@ -106,6 +108,34 @@ export class Venue extends Aggregate {
 		return [...this.zones];
 	}
 
+	async update(props: UpdateVenueProps, checker: VenueUniquenessChecker): Promise<void> {
+		if (this.status == VenueStatus.ARCHIVED) {
+			throw new VenueArchivedException(this.name.toString());
+		}
+		if (this.status == VenueStatus.IN_USED) {
+			throw new VenueInUsedException(this.name.toString());
+		}
+
+		let changed = false;
+
+		if (props.address && props.address !== this.address) {
+			if (await checker.existsByAddress(props.address)) {
+				throw new VenueAlreadyExistsException(props.address);
+			}
+			this.address = props.address;
+			changed = true;
+		}
+
+		if (props.name && props.name !== this.name.toString()) {
+			this.name = new VenueName(props.name);
+			changed = true;
+		}
+
+		if (changed) {
+			this.addEvent(new VenueUpdatedEvent(this._id.toString(), this.name.toString(), this.address));
+		}
+	}
+
 	static restore(props: VenueProps): Venue {
 		return new Venue(props);
 	}
@@ -123,7 +153,7 @@ export class Venue extends Aggregate {
 			status: VenueStatus.DRAFT
 		});
 
-		venue.addEvent(new VenueCreatedEvent(venue.id.toString(), venue.name.toString(), venue.address));
+		venue.addEvent(new VenueCreatedEvent(venue._id.toString(), venue.name.toString(), venue.address));
 
 		return venue;
 	}
