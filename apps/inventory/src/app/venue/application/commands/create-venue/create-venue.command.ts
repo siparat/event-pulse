@@ -1,7 +1,6 @@
 import { Command } from '@nestjs/cqrs';
-import { Venue } from '../../../domain/venue.aggregate';
 
-export class CreateVenueCommand extends Command<Pick<Venue, 'id'>> {
+export class CreateVenueCommand extends Command<{ id: string }> {
 	constructor(
 		public readonly name: string,
 		public readonly address: string

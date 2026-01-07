@@ -23,6 +23,11 @@ export class TypeormVenueRepository implements VenueRepository {
 		});
 	}
 
+	async findById(id: string): Promise<Venue | null> {
+		const venue = await this.repo.findOne({ where: { id } });
+		return venue && VenueMapper.toDomain(venue);
+	}
+
 	async findByAddress(address: string): Promise<Venue | null> {
 		const venue = await this.repo.findOne({ where: { address } });
 		return venue && VenueMapper.toDomain(venue);

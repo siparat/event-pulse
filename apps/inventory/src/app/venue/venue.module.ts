@@ -8,10 +8,16 @@ import { CreateVenueHandler } from './application/commands/create-venue/create-v
 import { TypeormVenueRepository } from './infrastructure/database/write/repositories/venue.repository';
 import { VenueRepository } from './domain/repositories/venue.repository';
 import { VenueCreatedHandler } from './application/events/venue-created/venue-created.handler';
+import { UpdateVenueHandler } from './application/commands/update-venue/update-venue.handler';
 
 @Module({
 	imports: [TypeOrmModule.forFeature([SeatModel, ZoneModel, VenueModel])],
 	controllers: [VenueController],
-	providers: [CreateVenueHandler, VenueCreatedHandler, { provide: VenueRepository, useClass: TypeormVenueRepository }]
+	providers: [
+		CreateVenueHandler,
+		UpdateVenueHandler,
+		VenueCreatedHandler,
+		{ provide: VenueRepository, useClass: TypeormVenueRepository }
+	]
 })
 export class VenueModule {}
