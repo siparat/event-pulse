@@ -7,6 +7,7 @@ import { VenueRepository } from '../../../../domain/repositories/venue.repositor
 import { VenueMapper } from '../mappers/venue.mapper';
 import { OutboxModel } from '../../../../../outbox/infrastructure/database/write/models/outbox.model';
 import { OutboxMapper } from '../../../../../outbox/infrastructure/database/write/mappers/outbox.mapper';
+import { VENUE_AGGREGATE_RELATION } from '../relations/venue.relations';
 
 @Injectable()
 export class TypeormVenueRepository implements VenueRepository {
@@ -24,12 +25,16 @@ export class TypeormVenueRepository implements VenueRepository {
 	}
 
 	async findById(id: string): Promise<Venue | null> {
-		const venue = await this.repo.findOne({ where: { id } });
+		const venue = await this.repo.findOne({
+			where: { id },
+			relations: VENUE_AGGREGATE_RELATION
+		});
+		console.log(venue);
 		return venue && VenueMapper.toDomain(venue);
 	}
 
 	async findByAddress(address: string): Promise<Venue | null> {
-		const venue = await this.repo.findOne({ where: { address } });
+		const venue = await this.repo.findOne({ where: { address }, relations: VENUE_AGGREGATE_RELATION });
 		return venue && VenueMapper.toDomain(venue);
 	}
 

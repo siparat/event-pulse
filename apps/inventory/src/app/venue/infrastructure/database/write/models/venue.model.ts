@@ -19,7 +19,7 @@ export class VenueModel {
 	@Column('text', { unique: true })
 	address: string;
 
-	@OneToMany(() => ZoneModel, (zone) => zone.venueId)
+	@OneToMany(() => ZoneModel, (zone) => zone.venue)
 	zones: ZoneModel[];
 
 	@Column({ type: 'enum', enum: VenueStatus, default: VenueStatus.DRAFT })

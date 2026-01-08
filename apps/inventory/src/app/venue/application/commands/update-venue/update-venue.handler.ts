@@ -1,8 +1,9 @@
-import { ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateVenueCommand } from './update-venue.command';
 import { VenueRepository } from '../../../domain/repositories/venue.repository';
 import { VenueNotFoundException } from '../../../domain/exceptions/venue-not-found.exception';
 
+@CommandHandler(UpdateVenueCommand)
 export class UpdateVenueHandler implements ICommandHandler<UpdateVenueCommand> {
 	constructor(private venueRepository: VenueRepository) {}
 
